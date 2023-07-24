@@ -9,6 +9,10 @@
     <version>1.0.0-SNAPSHOT</version>
 
     <name>request-tracker-spring-boot-starter</name>
+    <description>request-tracker-spring-boot-starter is a Spring Boot Starter dependency that transparently creates a
+        Servlet Filter in a Spring Boot Application that collect some information from request and response Servlet
+        objects and performs a custom action asynchronously (in a new thread).
+    </description>
     <url>https://github.com/rogeriofbrito/request-tracker-spring-boot-starter</url>
 
     <licenses>
