@@ -6,7 +6,7 @@
 
     <groupId>dev.rogeriofbrito</groupId>
     <artifactId>request-tracker-spring-boot-starter</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
 
     <name>request-tracker-spring-boot-starter</name>
     <description>request-tracker-spring-boot-starter is a Spring Boot Starter dependency that transparently creates a
