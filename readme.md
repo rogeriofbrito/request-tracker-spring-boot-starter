@@ -59,3 +59,75 @@ public class RequestTrackerConfiguration {
     }
 }
 ```
+
+## Some Use Cases
+
+### Call an url using RestTemplate
+
+```java
+@Component
+public class RestTemplateRequestTrackerAction implements RequestTrackerActionAdapter {
+
+    @Autowired
+    private RestTemplate restTemplate;
+    
+    @Value("${app.url}")
+    private String url;
+
+    @Override
+    public Thread send(String requestTrackerElementsJson) {
+
+        return new Thread(() -> restTemplate.postForEntity(url, requestTrackerElementsJson, Void.class));
+    }
+}
+```
+
+### Send to a SQS topic
+
+```java
+@Component
+public class SqsRequestTrackerAction implements RequestTrackerActionAdapter  {
+
+    @Autowired
+    private AmazonSQS amazonSQS;
+
+    @Value("${app.queueUrl}")
+    private String queueUrl;
+
+    @Override
+    public Thread send(String requestTrackerElementsJson) {
+
+        return new Thread(() -> amazonSQS.sendMessage(queueUrl,  requestTrackerElementsJson));
+    }
+}
+```
+
+### Put record to a Kinesis Firehose Stream
+
+```java
+@Component
+public class FirehoseRequestTrackerAction implements RequestTrackerActionAdapter  {
+
+    @Autowired
+    private AmazonKinesisFirehoseClient firehoseClient;
+
+    @Value("${app.deliveryStreamName}")
+    private String deliveryStreamName;
+
+    @Override
+    public Thread send(String requestTrackerElementsJson) {
+
+        return new Thread(() -> {
+            PutRecordRequest putRecordRequest = new PutRecordRequest();
+            putRecordRequest.setDeliveryStreamName(deliveryStreamName);
+
+            String data = requestTrackerElementsJson + "\n";
+
+            Record record = new Record().withData(ByteBuffer.wrap(data.getBytes()));
+            putRecordRequest.setRecord(record);
+            
+            firehoseClient.putRecord(putRecordRequest);
+        });
+    }
+}
+```
